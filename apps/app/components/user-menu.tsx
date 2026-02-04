@@ -2,12 +2,14 @@ import { signOut, useSessionQuery } from "@/lib/queries/session";
 import { Avatar, AvatarFallback, Button } from "@repo/ui";
 import { useQueryClient } from "@tanstack/react-query";
 import { LogOut, RefreshCw, User } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 /**
  * Example component showing how to use session query
  * with loading states and error handling
  */
 export function UserMenu() {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const { data: session, isPending, error, refetch } = useSessionQuery();
 
@@ -25,7 +27,7 @@ export function UserMenu() {
   if (error) {
     return (
       <div className="px-3 py-2 text-sm text-destructive">
-        Failed to load session
+        {t("common.failedToLoadSession")}
         <Button
           variant="ghost"
           size="sm"
@@ -33,7 +35,7 @@ export function UserMenu() {
           className="ml-2"
         >
           <RefreshCw className="h-3 w-3" />
-          Retry
+          {t("common.retry")}
         </Button>
       </div>
     );
@@ -61,7 +63,7 @@ export function UserMenu() {
           variant="ghost"
           size="icon"
           onClick={() => signOut(queryClient)}
-          title="Sign out"
+          title={t("common.signOut")}
         >
           <LogOut className="h-4 w-4" />
         </Button>

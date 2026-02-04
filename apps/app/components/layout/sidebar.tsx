@@ -1,5 +1,6 @@
 import { UserMenu } from "@/components/user-menu";
-import { sidebarItems } from "./constants";
+import { useTranslation } from "react-i18next";
+import { sidebarSections } from "./constants";
 import { SidebarNav } from "./sidebar-nav";
 
 interface SidebarProps {
@@ -7,6 +8,7 @@ interface SidebarProps {
 }
 
 export function Sidebar({ isOpen }: SidebarProps) {
+  const { t } = useTranslation();
   return (
     <aside
       className={`${
@@ -15,9 +17,11 @@ export function Sidebar({ isOpen }: SidebarProps) {
     >
       <div className="h-full flex flex-col">
         <div className="h-14 flex items-center px-4 border-b">
-          <h2 className="font-semibold text-lg">Console</h2>
+          <h2 className="font-semibold text-lg">
+            {t("nav.bridgeIntegration")}
+          </h2>
         </div>
-        <SidebarNav items={sidebarItems} />
+        <SidebarNav sections={sidebarSections} />
         <UserMenu />
       </div>
     </aside>

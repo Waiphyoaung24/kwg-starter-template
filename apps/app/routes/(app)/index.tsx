@@ -1,70 +1,112 @@
+import { useTranslation } from "react-i18next";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
+  Button,
 } from "@repo/ui";
 import { createFileRoute } from "@tanstack/react-router";
-import { Activity, FileText, TrendingUp, Users } from "lucide-react";
+import {
+  DollarSign,
+  ShoppingCart,
+  Users,
+  BarChart,
+  RefreshCw,
+  Link,
+  AlertTriangle,
+  PauseCircle,
+  Grab,
+  History,
+} from "lucide-react";
 
 export const Route = createFileRoute("/(app)/")({
   component: Dashboard,
 });
 
 function Dashboard() {
+  const { t } = useTranslation();
+
   const stats = [
     {
-      title: "Total Users",
-      value: "1,234",
-      change: "+12%",
+      titleKey: "dashboard.revenue",
+      value: "฿1,234,567",
+      icon: DollarSign,
+    },
+    {
+      titleKey: "dashboard.totalOrders",
+      value: "8,910",
+      icon: ShoppingCart,
+    },
+    {
+      titleKey: "dashboard.activeItems",
+      value: "฿138.50",
+      icon: BarChart,
+    },
+    {
+      titleKey: "users.totalUsers",
+      value: "123",
       icon: Users,
     },
+  ];
+
+  const activities = [
     {
-      title: "Active Sessions",
-      value: "89",
-      change: "+5%",
-      icon: Activity,
+      icon: Grab,
+      text: "New Order #88A1 from Grab injected into Wongnai.",
+      time: "2 minutes ago",
     },
     {
-      title: "Reports Generated",
-      value: "456",
-      change: "+23%",
-      icon: FileText,
+      icon: History,
+      text: "'Chicken Rice' marked SOLD OUT. Disabled on Grab Merchant.",
+      time: "10 minutes ago",
     },
     {
-      title: "Growth Rate",
-      value: "18.2%",
-      change: "+2.1%",
-      icon: TrendingUp,
+      icon: AlertTriangle,
+      text: "Failed to update price for 'Coke Zero' on Grab. Check API keys.",
+      time: "1 hour ago",
+    },
+  ];
+
+  const quickActions = [
+    {
+      titleKey: "dashboard.forceSync",
+      icon: RefreshCw,
+    },
+    {
+      titleKey: "dashboard.mapItems",
+      icon: Link,
+    },
+    {
+      titleKey: "dashboard.viewErrors",
+      icon: AlertTriangle,
+    },
+    {
+      titleKey: "dashboard.pauseIntegrations",
+      icon: PauseCircle,
     },
   ];
 
   return (
     <div className="p-6 space-y-6">
       <div>
-        <h2 className="text-2xl font-bold">Dashboard</h2>
-        <p className="text-muted-foreground">
-          Welcome back! Here's an overview of your application.
-        </p>
+        <h2 className="text-2xl font-bold">{t("dashboard.title")}</h2>
+        <p className="text-muted-foreground">{t("dashboard.subtitle")}</p>
       </div>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((stat) => (
-          <Card key={stat.title}>
+          <Card key={stat.titleKey}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                {stat.title}
+                {t(stat.titleKey)}
               </CardTitle>
               <stat.icon className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stat.value}</div>
-              <p className="text-xs text-muted-foreground">
-                <span className="text-green-600">{stat.change}</span> from last
-                month
-              </p>
             </CardContent>
           </Card>
         ))}
@@ -74,18 +116,23 @@ function Dashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
-            <CardTitle>Recent Activity</CardTitle>
-            <CardDescription>Latest events in your application</CardDescription>
+            <CardTitle>{t("dashboard.liveSyncActivity")}</CardTitle>
+            <CardDescription>{t("dashboard.latestEvents")}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="flex items-center gap-4">
-                  <div className="h-2 w-2 rounded-full bg-primary" />
+              {activities.map((activity) => (
+                <div
+                  key={`${activity.time}-${activity.text}`}
+                  className="flex items-center gap-4"
+                >
+                  <div className="h-8 w-8 flex items-center justify-center rounded-full bg-muted">
+                    <activity.icon className="h-4 w-4 text-muted-foreground" />
+                  </div>
                   <div className="flex-1">
-                    <p className="text-sm">User action performed</p>
+                    <p className="text-sm">{activity.text}</p>
                     <p className="text-xs text-muted-foreground">
-                      {i} hour{i > 1 ? "s" : ""} ago
+                      {activity.time}
                     </p>
                   </div>
                 </div>
@@ -96,39 +143,21 @@ function Dashboard() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
-            <CardDescription>Common tasks and operations</CardDescription>
+            <CardTitle>{t("dashboard.quickActions")}</CardTitle>
+            <CardDescription>{t("dashboard.commonTasks")}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 gap-4">
-              <button
-                type="button"
-                className="p-4 text-left border rounded-lg hover:bg-accent transition-colors"
-              >
-                <FileText className="h-5 w-5 mb-2" />
-                <p className="text-sm font-medium">Generate Report</p>
-              </button>
-              <button
-                type="button"
-                className="p-4 text-left border rounded-lg hover:bg-accent transition-colors"
-              >
-                <Users className="h-5 w-5 mb-2" />
-                <p className="text-sm font-medium">Manage Users</p>
-              </button>
-              <button
-                type="button"
-                className="p-4 text-left border rounded-lg hover:bg-accent transition-colors"
-              >
-                <Activity className="h-5 w-5 mb-2" />
-                <p className="text-sm font-medium">View Analytics</p>
-              </button>
-              <button
-                type="button"
-                className="p-4 text-left border rounded-lg hover:bg-accent transition-colors"
-              >
-                <TrendingUp className="h-5 w-5 mb-2" />
-                <p className="text-sm font-medium">Export Data</p>
-              </button>
+              {quickActions.map((action) => (
+                <Button
+                  key={action.titleKey}
+                  variant="outline"
+                  className="flex items-center justify-start gap-2 p-4 h-auto"
+                >
+                  <action.icon className="h-5 w-5" />
+                  <p className="text-sm font-medium">{t(action.titleKey)}</p>
+                </Button>
+              ))}
             </div>
           </CardContent>
         </Card>

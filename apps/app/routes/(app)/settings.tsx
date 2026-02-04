@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Button,
   Card,
@@ -11,20 +13,34 @@ import {
   Switch,
 } from "@repo/ui";
 import { createFileRoute } from "@tanstack/react-router";
-import { Bell, Palette, Shield, User } from "lucide-react";
+import { Bell, CreditCard, Palette, Shield, User, Upload } from "lucide-react";
+import { LanguageSwitcher } from "@/components/language-switcher";
 
 export const Route = createFileRoute("/(app)/settings")({
   component: Settings,
 });
 
 function Settings() {
+  const { t } = useTranslation();
+  const [promptPayId, setPromptPayId] = useState("");
+  const [shopLogo, setShopLogo] = useState<string | null>(null);
+
+  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setShopLogo(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <div className="p-6 space-y-6">
       <div>
-        <h2 className="text-2xl font-bold">Settings</h2>
-        <p className="text-muted-foreground">
-          Manage your account settings and preferences.
-        </p>
+        <h2 className="text-2xl font-bold">{t("settings.title")}</h2>
+        <p className="text-muted-foreground">{t("settings.subtitle")}</p>
       </div>
 
       <div className="grid gap-6">
@@ -33,22 +49,96 @@ function Settings() {
           <CardHeader>
             <div className="flex items-center gap-2">
               <User className="h-5 w-5" />
-              <CardTitle>Profile</CardTitle>
+              <CardTitle>{t("settings.profile")}</CardTitle>
             </div>
-            <CardDescription>
-              Update your personal information and profile settings.
-            </CardDescription>
+            <CardDescription>{t("settings.profileDesc")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-2">
-              <Label htmlFor="name">Name</Label>
-              <Input id="name" placeholder="Enter your name" />
+              <Label htmlFor="name">{t("settings.name")}</Label>
+              <Input id="name" placeholder={t("settings.name")} />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" placeholder="Enter your email" />
+              <Label htmlFor="email">{t("settings.email")}</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder={t("settings.email")}
+              />
             </div>
-            <Button>Save Changes</Button>
+            <Button>{t("settings.saveChanges")}</Button>
+          </CardContent>
+        </Card>
+
+        {/* Payment Configuration (FR-WEB-03) */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <CreditCard className="h-5 w-5" />
+              <CardTitle>{t("settings.payment")}</CardTitle>
+            </div>
+            <CardDescription>{t("settings.paymentDesc")}</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid gap-2">
+              <Label htmlFor="promptpay">{t("settings.promptPayId")}</Label>
+              <Input
+                id="promptpay"
+                placeholder={t("settings.promptPayIdPlaceholder")}
+                value={promptPayId}
+                onChange={(e) => setPromptPayId(e.target.value)}
+              />
+              <p className="text-xs text-muted-foreground">
+                {t("settings.promptPayIdPlaceholder")}
+              </p>
+            </div>
+            <Separator />
+            <div className="grid gap-2">
+              <Label>{t("settings.shopLogo")}</Label>
+              <div className="flex items-center gap-4">
+                {shopLogo ? (
+                  <img
+                    src={shopLogo}
+                    alt="Shop Logo"
+                    className="h-16 w-16 object-contain rounded border"
+                  />
+                ) : (
+                  <div className="h-16 w-16 rounded border border-dashed flex items-center justify-center">
+                    <Upload className="h-6 w-6 text-muted-foreground" />
+                  </div>
+                )}
+                <div>
+                  <input
+                    id="logo"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleLogoUpload}
+                    className="hidden"
+                  />
+                  <Button
+                    variant="outline"
+                    onClick={() => document.getElementById("logo")?.click()}
+                  >
+                    {t("settings.uploadLogo")}
+                  </Button>
+                </div>
+              </div>
+            </div>
+            <Button>{t("settings.saveChanges")}</Button>
+          </CardContent>
+        </Card>
+
+        {/* Language Settings (5.1) */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <Palette className="h-5 w-5" />
+              <CardTitle>{t("settings.language")}</CardTitle>
+            </div>
+            <CardDescription>{t("settings.languageDesc")}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <LanguageSwitcher />
           </CardContent>
         </Card>
 
@@ -57,29 +147,25 @@ function Settings() {
           <CardHeader>
             <div className="flex items-center gap-2">
               <Bell className="h-5 w-5" />
-              <CardTitle>Notifications</CardTitle>
+              <CardTitle>{t("settings.notifications")}</CardTitle>
             </div>
-            <CardDescription>
-              Configure how you receive notifications.
-            </CardDescription>
+            <CardDescription>{t("settings.notificationsDesc")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label htmlFor="email-notifications">Email Notifications</Label>
-                <p className="text-sm text-muted-foreground">
-                  Receive notifications via email
-                </p>
+                <Label htmlFor="email-notifications">
+                  {t("settings.emailNotifications")}
+                </Label>
               </div>
               <Switch id="email-notifications" />
             </div>
             <Separator />
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label htmlFor="push-notifications">Push Notifications</Label>
-                <p className="text-sm text-muted-foreground">
-                  Receive push notifications in your browser
-                </p>
+                <Label htmlFor="push-notifications">
+                  {t("settings.pushNotifications")}
+                </Label>
               </div>
               <Switch id="push-notifications" />
             </div>
@@ -91,21 +177,13 @@ function Settings() {
           <CardHeader>
             <div className="flex items-center gap-2">
               <Shield className="h-5 w-5" />
-              <CardTitle>Security</CardTitle>
+              <CardTitle>{t("settings.security")}</CardTitle>
             </div>
-            <CardDescription>
-              Manage your security preferences and authentication.
-            </CardDescription>
+            <CardDescription>{t("settings.securityDesc")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Button variant="outline">Change Password</Button>
-            </div>
-            <div className="space-y-2">
-              <Button variant="outline">
-                Enable Two-Factor Authentication
-              </Button>
-            </div>
+            <Button variant="outline">{t("settings.changePassword")}</Button>
+            <Button variant="outline">{t("settings.enable2FA")}</Button>
           </CardContent>
         </Card>
 
@@ -114,19 +192,14 @@ function Settings() {
           <CardHeader>
             <div className="flex items-center gap-2">
               <Palette className="h-5 w-5" />
-              <CardTitle>Appearance</CardTitle>
+              <CardTitle>{t("settings.appearance")}</CardTitle>
             </div>
-            <CardDescription>
-              Customize the look and feel of the application.
-            </CardDescription>
+            <CardDescription>{t("settings.appearanceDesc")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label htmlFor="dark-mode">Dark Mode</Label>
-                <p className="text-sm text-muted-foreground">
-                  Toggle dark mode theme
-                </p>
+                <Label htmlFor="dark-mode">{t("settings.darkMode")}</Label>
               </div>
               <Switch id="dark-mode" />
             </div>
