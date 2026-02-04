@@ -1,17 +1,8 @@
-import { createStore, Provider } from "jotai";
-import type { ReactNode } from "react";
-import { createElement } from "react";
+import { atom } from "jotai";
 
-/**
- * Global state management powered by Jotai.
- * @see https://jotai.org/
- */
-export const store = createStore();
+// Atom for controlling the visibility of the sync status popover
+export const syncStatusPopoverOpenAtom = atom(false);
 
-export function StoreProvider(props: StoreProviderProps) {
-  return createElement(Provider, { store, ...props });
-}
-
-export type StoreProviderProps = {
-  children: ReactNode;
-};
+// Atom for the current sync status
+export type SyncStatus = "synced" | "syncing" | "error";
+export const syncStatusAtom = atom<SyncStatus>("synced");

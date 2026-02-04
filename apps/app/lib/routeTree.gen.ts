@@ -15,11 +15,20 @@ import { Route as authSignupRouteImport } from './../routes/(auth)/signup'
 import { Route as authLoginRouteImport } from './../routes/(auth)/login'
 import { Route as appUsersRouteImport } from './../routes/(app)/users'
 import { Route as appTestRouteImport } from './../routes/(app)/test'
+import { Route as appSyncLogsRouteImport } from './../routes/(app)/sync-logs'
 import { Route as appSettingsRouteImport } from './../routes/(app)/settings'
 import { Route as appReportsRouteImport } from './../routes/(app)/reports'
+import { Route as appMenuMappingRouteImport } from './../routes/(app)/menu-mapping'
+import { Route as appLiveOrdersRouteImport } from './../routes/(app)/live-orders'
+import { Route as appInventoryRouteImport } from './../routes/(app)/inventory'
+import { Route as appIntegrationsRouteImport } from './../routes/(app)/integrations'
 import { Route as appDashboardRouteImport } from './../routes/(app)/dashboard'
 import { Route as appAnalyticsRouteImport } from './../routes/(app)/analytics'
 import { Route as appAboutRouteImport } from './../routes/(app)/about'
+import { Route as appReportsIndexRouteImport } from './../routes/(app)/reports/index'
+import { Route as appReportsStockLevelsRouteImport } from './../routes/(app)/reports/stock-levels'
+import { Route as appReportsSalesSummaryRouteImport } from './../routes/(app)/reports/sales-summary'
+import { Route as appReportsMonthlyRevenueRouteImport } from './../routes/(app)/reports/monthly-revenue'
 
 const appRouteRoute = appRouteRouteImport.update({
   id: '/(app)',
@@ -50,6 +59,11 @@ const appTestRoute = appTestRouteImport.update({
   path: '/test',
   getParentRoute: () => appRouteRoute,
 } as any)
+const appSyncLogsRoute = appSyncLogsRouteImport.update({
+  id: '/sync-logs',
+  path: '/sync-logs',
+  getParentRoute: () => appRouteRoute,
+} as any)
 const appSettingsRoute = appSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -58,6 +72,26 @@ const appSettingsRoute = appSettingsRouteImport.update({
 const appReportsRoute = appReportsRouteImport.update({
   id: '/reports',
   path: '/reports',
+  getParentRoute: () => appRouteRoute,
+} as any)
+const appMenuMappingRoute = appMenuMappingRouteImport.update({
+  id: '/menu-mapping',
+  path: '/menu-mapping',
+  getParentRoute: () => appRouteRoute,
+} as any)
+const appLiveOrdersRoute = appLiveOrdersRouteImport.update({
+  id: '/live-orders',
+  path: '/live-orders',
+  getParentRoute: () => appRouteRoute,
+} as any)
+const appInventoryRoute = appInventoryRouteImport.update({
+  id: '/inventory',
+  path: '/inventory',
+  getParentRoute: () => appRouteRoute,
+} as any)
+const appIntegrationsRoute = appIntegrationsRouteImport.update({
+  id: '/integrations',
+  path: '/integrations',
   getParentRoute: () => appRouteRoute,
 } as any)
 const appDashboardRoute = appDashboardRouteImport.update({
@@ -75,30 +109,68 @@ const appAboutRoute = appAboutRouteImport.update({
   path: '/about',
   getParentRoute: () => appRouteRoute,
 } as any)
+const appReportsIndexRoute = appReportsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => appReportsRoute,
+} as any)
+const appReportsStockLevelsRoute = appReportsStockLevelsRouteImport.update({
+  id: '/stock-levels',
+  path: '/stock-levels',
+  getParentRoute: () => appReportsRoute,
+} as any)
+const appReportsSalesSummaryRoute = appReportsSalesSummaryRouteImport.update({
+  id: '/sales-summary',
+  path: '/sales-summary',
+  getParentRoute: () => appReportsRoute,
+} as any)
+const appReportsMonthlyRevenueRoute =
+  appReportsMonthlyRevenueRouteImport.update({
+    id: '/monthly-revenue',
+    path: '/monthly-revenue',
+    getParentRoute: () => appReportsRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/about': typeof appAboutRoute
   '/analytics': typeof appAnalyticsRoute
   '/dashboard': typeof appDashboardRoute
-  '/reports': typeof appReportsRoute
+  '/integrations': typeof appIntegrationsRoute
+  '/inventory': typeof appInventoryRoute
+  '/live-orders': typeof appLiveOrdersRoute
+  '/menu-mapping': typeof appMenuMappingRoute
+  '/reports': typeof appReportsRouteWithChildren
   '/settings': typeof appSettingsRoute
+  '/sync-logs': typeof appSyncLogsRoute
   '/test': typeof appTestRoute
   '/users': typeof appUsersRoute
   '/login': typeof authLoginRoute
   '/signup': typeof authSignupRoute
   '/': typeof appIndexRoute
+  '/reports/monthly-revenue': typeof appReportsMonthlyRevenueRoute
+  '/reports/sales-summary': typeof appReportsSalesSummaryRoute
+  '/reports/stock-levels': typeof appReportsStockLevelsRoute
+  '/reports/': typeof appReportsIndexRoute
 }
 export interface FileRoutesByTo {
   '/about': typeof appAboutRoute
   '/analytics': typeof appAnalyticsRoute
   '/dashboard': typeof appDashboardRoute
-  '/reports': typeof appReportsRoute
+  '/integrations': typeof appIntegrationsRoute
+  '/inventory': typeof appInventoryRoute
+  '/live-orders': typeof appLiveOrdersRoute
+  '/menu-mapping': typeof appMenuMappingRoute
   '/settings': typeof appSettingsRoute
+  '/sync-logs': typeof appSyncLogsRoute
   '/test': typeof appTestRoute
   '/users': typeof appUsersRoute
   '/login': typeof authLoginRoute
   '/signup': typeof authSignupRoute
   '/': typeof appIndexRoute
+  '/reports/monthly-revenue': typeof appReportsMonthlyRevenueRoute
+  '/reports/sales-summary': typeof appReportsSalesSummaryRoute
+  '/reports/stock-levels': typeof appReportsStockLevelsRoute
+  '/reports': typeof appReportsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -106,13 +178,22 @@ export interface FileRoutesById {
   '/(app)/about': typeof appAboutRoute
   '/(app)/analytics': typeof appAnalyticsRoute
   '/(app)/dashboard': typeof appDashboardRoute
-  '/(app)/reports': typeof appReportsRoute
+  '/(app)/integrations': typeof appIntegrationsRoute
+  '/(app)/inventory': typeof appInventoryRoute
+  '/(app)/live-orders': typeof appLiveOrdersRoute
+  '/(app)/menu-mapping': typeof appMenuMappingRoute
+  '/(app)/reports': typeof appReportsRouteWithChildren
   '/(app)/settings': typeof appSettingsRoute
+  '/(app)/sync-logs': typeof appSyncLogsRoute
   '/(app)/test': typeof appTestRoute
   '/(app)/users': typeof appUsersRoute
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/signup': typeof authSignupRoute
   '/(app)/': typeof appIndexRoute
+  '/(app)/reports/monthly-revenue': typeof appReportsMonthlyRevenueRoute
+  '/(app)/reports/sales-summary': typeof appReportsSalesSummaryRoute
+  '/(app)/reports/stock-levels': typeof appReportsStockLevelsRoute
+  '/(app)/reports/': typeof appReportsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -120,38 +201,64 @@ export interface FileRouteTypes {
     | '/about'
     | '/analytics'
     | '/dashboard'
+    | '/integrations'
+    | '/inventory'
+    | '/live-orders'
+    | '/menu-mapping'
     | '/reports'
     | '/settings'
+    | '/sync-logs'
     | '/test'
     | '/users'
     | '/login'
     | '/signup'
     | '/'
+    | '/reports/monthly-revenue'
+    | '/reports/sales-summary'
+    | '/reports/stock-levels'
+    | '/reports/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/about'
     | '/analytics'
     | '/dashboard'
-    | '/reports'
+    | '/integrations'
+    | '/inventory'
+    | '/live-orders'
+    | '/menu-mapping'
     | '/settings'
+    | '/sync-logs'
     | '/test'
     | '/users'
     | '/login'
     | '/signup'
     | '/'
+    | '/reports/monthly-revenue'
+    | '/reports/sales-summary'
+    | '/reports/stock-levels'
+    | '/reports'
   id:
     | '__root__'
     | '/(app)'
     | '/(app)/about'
     | '/(app)/analytics'
     | '/(app)/dashboard'
+    | '/(app)/integrations'
+    | '/(app)/inventory'
+    | '/(app)/live-orders'
+    | '/(app)/menu-mapping'
     | '/(app)/reports'
     | '/(app)/settings'
+    | '/(app)/sync-logs'
     | '/(app)/test'
     | '/(app)/users'
     | '/(auth)/login'
     | '/(auth)/signup'
     | '/(app)/'
+    | '/(app)/reports/monthly-revenue'
+    | '/(app)/reports/sales-summary'
+    | '/(app)/reports/stock-levels'
+    | '/(app)/reports/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -204,6 +311,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof appTestRouteImport
       parentRoute: typeof appRouteRoute
     }
+    '/(app)/sync-logs': {
+      id: '/(app)/sync-logs'
+      path: '/sync-logs'
+      fullPath: '/sync-logs'
+      preLoaderRoute: typeof appSyncLogsRouteImport
+      parentRoute: typeof appRouteRoute
+    }
     '/(app)/settings': {
       id: '/(app)/settings'
       path: '/settings'
@@ -216,6 +330,34 @@ declare module '@tanstack/react-router' {
       path: '/reports'
       fullPath: '/reports'
       preLoaderRoute: typeof appReportsRouteImport
+      parentRoute: typeof appRouteRoute
+    }
+    '/(app)/menu-mapping': {
+      id: '/(app)/menu-mapping'
+      path: '/menu-mapping'
+      fullPath: '/menu-mapping'
+      preLoaderRoute: typeof appMenuMappingRouteImport
+      parentRoute: typeof appRouteRoute
+    }
+    '/(app)/live-orders': {
+      id: '/(app)/live-orders'
+      path: '/live-orders'
+      fullPath: '/live-orders'
+      preLoaderRoute: typeof appLiveOrdersRouteImport
+      parentRoute: typeof appRouteRoute
+    }
+    '/(app)/inventory': {
+      id: '/(app)/inventory'
+      path: '/inventory'
+      fullPath: '/inventory'
+      preLoaderRoute: typeof appInventoryRouteImport
+      parentRoute: typeof appRouteRoute
+    }
+    '/(app)/integrations': {
+      id: '/(app)/integrations'
+      path: '/integrations'
+      fullPath: '/integrations'
+      preLoaderRoute: typeof appIntegrationsRouteImport
       parentRoute: typeof appRouteRoute
     }
     '/(app)/dashboard': {
@@ -239,15 +381,66 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof appAboutRouteImport
       parentRoute: typeof appRouteRoute
     }
+    '/(app)/reports/': {
+      id: '/(app)/reports/'
+      path: '/'
+      fullPath: '/reports/'
+      preLoaderRoute: typeof appReportsIndexRouteImport
+      parentRoute: typeof appReportsRoute
+    }
+    '/(app)/reports/stock-levels': {
+      id: '/(app)/reports/stock-levels'
+      path: '/stock-levels'
+      fullPath: '/reports/stock-levels'
+      preLoaderRoute: typeof appReportsStockLevelsRouteImport
+      parentRoute: typeof appReportsRoute
+    }
+    '/(app)/reports/sales-summary': {
+      id: '/(app)/reports/sales-summary'
+      path: '/sales-summary'
+      fullPath: '/reports/sales-summary'
+      preLoaderRoute: typeof appReportsSalesSummaryRouteImport
+      parentRoute: typeof appReportsRoute
+    }
+    '/(app)/reports/monthly-revenue': {
+      id: '/(app)/reports/monthly-revenue'
+      path: '/monthly-revenue'
+      fullPath: '/reports/monthly-revenue'
+      preLoaderRoute: typeof appReportsMonthlyRevenueRouteImport
+      parentRoute: typeof appReportsRoute
+    }
   }
 }
+
+interface appReportsRouteChildren {
+  appReportsMonthlyRevenueRoute: typeof appReportsMonthlyRevenueRoute
+  appReportsSalesSummaryRoute: typeof appReportsSalesSummaryRoute
+  appReportsStockLevelsRoute: typeof appReportsStockLevelsRoute
+  appReportsIndexRoute: typeof appReportsIndexRoute
+}
+
+const appReportsRouteChildren: appReportsRouteChildren = {
+  appReportsMonthlyRevenueRoute: appReportsMonthlyRevenueRoute,
+  appReportsSalesSummaryRoute: appReportsSalesSummaryRoute,
+  appReportsStockLevelsRoute: appReportsStockLevelsRoute,
+  appReportsIndexRoute: appReportsIndexRoute,
+}
+
+const appReportsRouteWithChildren = appReportsRoute._addFileChildren(
+  appReportsRouteChildren,
+)
 
 interface appRouteRouteChildren {
   appAboutRoute: typeof appAboutRoute
   appAnalyticsRoute: typeof appAnalyticsRoute
   appDashboardRoute: typeof appDashboardRoute
-  appReportsRoute: typeof appReportsRoute
+  appIntegrationsRoute: typeof appIntegrationsRoute
+  appInventoryRoute: typeof appInventoryRoute
+  appLiveOrdersRoute: typeof appLiveOrdersRoute
+  appMenuMappingRoute: typeof appMenuMappingRoute
+  appReportsRoute: typeof appReportsRouteWithChildren
   appSettingsRoute: typeof appSettingsRoute
+  appSyncLogsRoute: typeof appSyncLogsRoute
   appTestRoute: typeof appTestRoute
   appUsersRoute: typeof appUsersRoute
   appIndexRoute: typeof appIndexRoute
@@ -257,8 +450,13 @@ const appRouteRouteChildren: appRouteRouteChildren = {
   appAboutRoute: appAboutRoute,
   appAnalyticsRoute: appAnalyticsRoute,
   appDashboardRoute: appDashboardRoute,
-  appReportsRoute: appReportsRoute,
+  appIntegrationsRoute: appIntegrationsRoute,
+  appInventoryRoute: appInventoryRoute,
+  appLiveOrdersRoute: appLiveOrdersRoute,
+  appMenuMappingRoute: appMenuMappingRoute,
+  appReportsRoute: appReportsRouteWithChildren,
   appSettingsRoute: appSettingsRoute,
+  appSyncLogsRoute: appSyncLogsRoute,
   appTestRoute: appTestRoute,
   appUsersRoute: appUsersRoute,
   appIndexRoute: appIndexRoute,

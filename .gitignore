@@ -22,6 +22,7 @@ node_modules/
 *.lcov
 
 # Environment variables
+.env
 .env.*.local
 .env.local
 
@@ -58,6 +59,7 @@ docs/.vitepress/dist
 .react-email/
 
 # Local development files
+.claude/
 *.local.md
 *.local.json
 *.local.jsonc
@@ -67,3 +69,4 @@ docs/.vitepress/dist
 # https://github.com/github/gitignore/blob/master/Global/macOS.gitignore
 .DS_Store
 
+.env.prod.local

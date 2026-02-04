@@ -148,5 +148,10 @@
     "*": [
       "bunx prettier --check --ignore-unknown"
     ]
+  },
+  "dependencies": {
+    "@types/recharts": "^2.0.1",
+    "app": "^0.1.0",
+    "recharts": "^3.7.0"
   }
 }
