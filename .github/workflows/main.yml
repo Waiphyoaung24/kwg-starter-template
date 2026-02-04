@@ -33,6 +33,12 @@ jobs:
   build:
     name: "Build"
     runs-on: ubuntu-latest
+    env:
+      APP_NAME: NexusPoint
+      APP_ORIGIN: http://localhost:5173
+      API_ORIGIN: http://localhost:8787
+      GOOGLE_CLOUD_PROJECT: kwg-dev-pokedex
+      GA_MEASUREMENT_ID: G-XXXXXXXX
     steps:
       - uses: actions/checkout@v6
       # Configure Bun and install dependencies

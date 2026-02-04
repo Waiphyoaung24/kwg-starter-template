@@ -22,8 +22,9 @@ export default defineProject(({ mode }) => {
   const env = loadEnv(mode, envDir, "");
 
   publicEnvVars.forEach((key) => {
-    if (!env[key]) throw new Error(`Missing environment variable: ${key}`);
-    process.env[`VITE_${key}`] = env[key];
+    const value = env[key] ?? process.env[key];
+    if (!value) throw new Error(`Missing environment variable: ${key}`);
+    process.env[`VITE_${key}`] = value;
   });
 
   return {
@@ -76,7 +77,7 @@ export default defineProject(({ mode }) => {
       proxy: {
         // Proxy API requests to the backend server during development
         "/api": {
-          target: env.API_ORIGIN,
+          target: env.API_ORIGIN ?? process.env.API_ORIGIN,
           changeOrigin: true,
           configure(proxy) {
             proxy.on("proxyReq", (proxyReq, req) => {
