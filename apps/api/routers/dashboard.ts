@@ -1,4 +1,3 @@
-import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { eq, and, sum, count } from "drizzle-orm";
 import { order, menuItem, member } from "@repo/db";
