@@ -2,6 +2,7 @@ import {
   EmailVerification,
   OTPEmail,
   PasswordReset,
+  Invitation,
   renderEmailToHtml,
   renderEmailToText,
 } from "@repo/email";
@@ -188,6 +189,46 @@ export async function sendOTP(
   return sendEmail(env, {
     to: options.email,
     subject: `Your ${typeLabels[options.type]} code`,
+    html,
+    text,
+  });
+}
+
+/**
+ * Send organization invitation email.
+ *
+ * @param env Environment variables
+ * @param options Invitation details
+ */
+export async function sendInvitationEmail(
+  env: Pick<
+    Env,
+    "RESEND_API_KEY" | "RESEND_EMAIL_FROM" | "APP_NAME" | "APP_ORIGIN"
+  >,
+  options: {
+    to: string;
+    invitedBy: { email: string; name?: string };
+    organizationName: string;
+    role: string;
+    url: string;
+  },
+) {
+  const component = Invitation({
+    invitedByEmail: options.invitedBy.email,
+    invitedByName: options.invitedBy.name,
+    organizationName: options.organizationName,
+    inviteUrl: options.url,
+    role: options.role,
+    appName: env.APP_NAME,
+    appUrl: env.APP_ORIGIN,
+  });
+
+  const html = await renderEmailToHtml(component);
+  const text = await renderEmailToText(component);
+
+  return sendEmail(env, {
+    to: options.to,
+    subject: `Invitation to join ${options.organizationName}`,
     html,
     text,
   });
