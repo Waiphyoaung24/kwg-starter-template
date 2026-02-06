@@ -371,6 +371,25 @@ export const organizationRouter = router({
         // throw new TRPCError({ code: "FORBIDDEN", message: "This invitation was sent to a different email address." });
       }
 
+      // Check if user is already a member
+      const existingMember = await ctx.db
+        .select()
+        .from(member)
+        .where(
+          and(
+            eq(member.userId, ctx.user.id),
+            eq(member.organizationId, invite[0]!.organizationId),
+          ),
+        )
+        .limit(1);
+
+      if (existingMember.length > 0) {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "You are already a member of this organization",
+        });
+      }
+
       await ctx.db.transaction(async (tx) => {
         // Add member
         await tx.insert(member).values({
