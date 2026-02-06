@@ -77,6 +77,9 @@ app.use(async (c, next) => {
       "http://localhost:5173",
   };
 
+  // Set merged env on the context so c.env includes process.env variables
+  c.env = env;
+
   c.set("db", db);
   c.set("dbDirect", dbDirect);
   c.set("auth", createAuth(db, env));

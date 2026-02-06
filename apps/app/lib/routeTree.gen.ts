@@ -9,6 +9,8 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './../routes/__root'
+import { Route as AdminRouteImport } from './../routes/admin'
+import { Route as AcceptInviteRouteImport } from './../routes/accept-invite'
 import { Route as appRouteRouteImport } from './../routes/(app)/route'
 import { Route as appIndexRouteImport } from './../routes/(app)/index'
 import { Route as authSignupRouteImport } from './../routes/(auth)/signup'
@@ -30,6 +32,16 @@ import { Route as appReportsStockLevelsRouteImport } from './../routes/(app)/rep
 import { Route as appReportsSalesSummaryRouteImport } from './../routes/(app)/reports/sales-summary'
 import { Route as appReportsMonthlyRevenueRouteImport } from './../routes/(app)/reports/monthly-revenue'
 
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AcceptInviteRoute = AcceptInviteRouteImport.update({
+  id: '/accept-invite',
+  path: '/accept-invite',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const appRouteRoute = appRouteRouteImport.update({
   id: '/(app)',
   getParentRoute: () => rootRouteImport,
@@ -132,6 +144,8 @@ const appReportsMonthlyRevenueRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
+  '/accept-invite': typeof AcceptInviteRoute
+  '/admin': typeof AdminRoute
   '/about': typeof appAboutRoute
   '/analytics': typeof appAnalyticsRoute
   '/dashboard': typeof appDashboardRoute
@@ -153,6 +167,8 @@ export interface FileRoutesByFullPath {
   '/reports/': typeof appReportsIndexRoute
 }
 export interface FileRoutesByTo {
+  '/accept-invite': typeof AcceptInviteRoute
+  '/admin': typeof AdminRoute
   '/about': typeof appAboutRoute
   '/analytics': typeof appAnalyticsRoute
   '/dashboard': typeof appDashboardRoute
@@ -175,6 +191,8 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/(app)': typeof appRouteRouteWithChildren
+  '/accept-invite': typeof AcceptInviteRoute
+  '/admin': typeof AdminRoute
   '/(app)/about': typeof appAboutRoute
   '/(app)/analytics': typeof appAnalyticsRoute
   '/(app)/dashboard': typeof appDashboardRoute
@@ -198,6 +216,8 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/accept-invite'
+    | '/admin'
     | '/about'
     | '/analytics'
     | '/dashboard'
@@ -219,6 +239,8 @@ export interface FileRouteTypes {
     | '/reports/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/accept-invite'
+    | '/admin'
     | '/about'
     | '/analytics'
     | '/dashboard'
@@ -240,6 +262,8 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/(app)'
+    | '/accept-invite'
+    | '/admin'
     | '/(app)/about'
     | '/(app)/analytics'
     | '/(app)/dashboard'
@@ -263,12 +287,28 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   appRouteRoute: typeof appRouteRouteWithChildren
+  AcceptInviteRoute: typeof AcceptInviteRoute
+  AdminRoute: typeof AdminRoute
   authLoginRoute: typeof authLoginRoute
   authSignupRoute: typeof authSignupRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accept-invite': {
+      id: '/accept-invite'
+      path: '/accept-invite'
+      fullPath: '/accept-invite'
+      preLoaderRoute: typeof AcceptInviteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/(app)': {
       id: '/(app)'
       path: ''
@@ -468,6 +508,8 @@ const appRouteRouteWithChildren = appRouteRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   appRouteRoute: appRouteRouteWithChildren,
+  AcceptInviteRoute: AcceptInviteRoute,
+  AdminRoute: AdminRoute,
   authLoginRoute: authLoginRoute,
   authSignupRoute: authSignupRoute,
 }
