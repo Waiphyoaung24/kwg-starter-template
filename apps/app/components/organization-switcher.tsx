@@ -26,8 +26,16 @@ export function OrganizationSwitcher() {
   const setActiveMutation = useMutation(
     api.organization.setActive.mutationOptions({
       onSuccess: () => {
+        // Clear branch selection from previous organization
         setCurrentBranch(null);
+
+        // Invalidate session to fetch new activeOrganizationId
         invalidateSession(queryClient);
+
+        // Invalidate branch cache to clear old organization's branches
+        queryClient.invalidateQueries({
+          queryKey: [["branch", "list"]],
+        });
       },
     }),
   );
