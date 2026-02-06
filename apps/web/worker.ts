@@ -27,6 +27,7 @@ app.all("/_app/*", (c) => c.env.APP_SERVICE.fetch(c.req.raw));
 app.all("/login*", (c) => c.env.APP_SERVICE.fetch(c.req.raw));
 app.all("/signup*", (c) => c.env.APP_SERVICE.fetch(c.req.raw));
 app.all("/settings*", (c) => c.env.APP_SERVICE.fetch(c.req.raw));
+app.all("/admin*", (c) => c.env.APP_SERVICE.fetch(c.req.raw));
 app.all("/analytics*", (c) => c.env.APP_SERVICE.fetch(c.req.raw));
 app.all("/reports*", (c) => c.env.APP_SERVICE.fetch(c.req.raw));
 
