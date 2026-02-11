@@ -1,21 +1,52 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { eq, and } from "drizzle-orm";
-import { menuItem, menuMapping } from "@repo/db";
+import { menuItem, menuMapping, member } from "@repo/db";
 import { router, protectedProcedure } from "../lib/trpc.js";
+import type { TRPCContext } from "../lib/context.js";
+
+/**
+ * Helper to get organization ID with fallback for legacy sessions.
+ * If session lacks activeOrganizationId (old sessions before auto-select),
+ * fetches user's first organization membership.
+ *
+ * @param ctx - Context from protectedProcedure (user and session guaranteed non-null)
+ */
+async function getOrganizationId(
+  ctx: TRPCContext & {
+    user: NonNullable<TRPCContext["user"]>;
+    session: NonNullable<TRPCContext["session"]>;
+  },
+): Promise<string> {
+  let orgId = ctx.session.activeOrganizationId;
+
+  // Fallback for legacy sessions without activeOrganizationId
+  if (!orgId) {
+    const userMemberships = await ctx.db
+      .select({ organizationId: member.organizationId })
+      .from(member)
+      .where(eq(member.userId, ctx.user.id))
+      .limit(1);
+
+    if (userMemberships.length > 0) {
+      orgId = userMemberships[0].organizationId;
+    } else {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "No organization selected",
+      });
+    }
+  }
+
+  return orgId;
+}
 
 export const menuRouter = router({
   // List all menu items for the current organization
   listItems: protectedProcedure
     .input(z.object({ branchId: z.string().optional() }).optional())
     .query(async ({ ctx, input }) => {
-      const orgId = ctx.session?.activeOrganizationId;
-      if (!orgId) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "No organization selected",
-        });
-      }
+      const orgId = await getOrganizationId(ctx);
 
       const conditions = [eq(menuItem.organizationId, orgId)];
       if (input?.branchId) {
@@ -33,13 +64,7 @@ export const menuRouter = router({
   getItem: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
-      const orgId = ctx.session?.activeOrganizationId;
-      if (!orgId) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "No organization selected",
-        });
-      }
+      const orgId = await getOrganizationId(ctx);
 
       const result = await ctx.db
         .select()
@@ -75,13 +100,7 @@ export const menuRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const orgId = ctx.session?.activeOrganizationId;
-      if (!orgId) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "No organization selected",
-        });
-      }
+      const orgId = await getOrganizationId(ctx);
 
       const [newItem] = await ctx.db
         .insert(menuItem)
@@ -119,13 +138,7 @@ export const menuRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const orgId = ctx.session?.activeOrganizationId;
-      if (!orgId) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "No organization selected",
-        });
-      }
+      const orgId = await getOrganizationId(ctx);
 
       const [updated] = await ctx.db
         .update(menuItem)
@@ -159,13 +172,7 @@ export const menuRouter = router({
   deleteItem: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const orgId = ctx.session?.activeOrganizationId;
-      if (!orgId) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "No organization selected",
-        });
-      }
+      const orgId = await getOrganizationId(ctx);
 
       const [deleted] = await ctx.db
         .delete(menuItem)
@@ -188,13 +195,7 @@ export const menuRouter = router({
   listMappings: protectedProcedure
     .input(z.object({ menuItemId: z.string().optional() }).optional())
     .query(async ({ ctx, input }) => {
-      const orgId = ctx.session?.activeOrganizationId;
-      if (!orgId) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "No organization selected",
-        });
-      }
+      const orgId = await getOrganizationId(ctx);
 
       const conditions = [eq(menuMapping.organizationId, orgId)];
       if (input?.menuItemId) {
@@ -218,13 +219,7 @@ export const menuRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const orgId = ctx.session?.activeOrganizationId;
-      if (!orgId) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "No organization selected",
-        });
-      }
+      const orgId = await getOrganizationId(ctx);
 
       // Check if item exists and belongs to org
       const item = await ctx.db
@@ -271,13 +266,7 @@ export const menuRouter = router({
   deleteMapping: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const orgId = ctx.session?.activeOrganizationId;
-      if (!orgId) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "No organization selected",
-        });
-      }
+      const orgId = await getOrganizationId(ctx);
 
       const [deleted] = await ctx.db
         .delete(menuMapping)
